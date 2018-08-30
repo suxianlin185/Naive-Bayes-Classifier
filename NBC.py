@@ -52,7 +52,8 @@ def TextProcessing(folder_path, test_size=0.2):
 
     ## 划分训练集和测试集
     # train_data_list, test_data_list, train_class_list, test_class_list = sklearn.cross_validation.train_test_split(data_list, class_list, test_size=test_size)
-    data_class_list = zip(data_list, class_list)
+    data_class_list_tmp = zip(data_list, class_list)
+    data_class_list=list(data_class_list_tmp)
     random.shuffle(data_class_list)
     index = int(len(data_class_list)*test_size)+1
     train_list = data_class_list[index:]
@@ -64,13 +65,13 @@ def TextProcessing(folder_path, test_size=0.2):
     all_words_dict = {}
     for word_list in train_data_list:
         for word in word_list:
-            if all_words_dict.has_key(word):
+            if all_words_dict.__contains__(word):
                 all_words_dict[word] += 1
             else:
                 all_words_dict[word] = 1
     # key函数利用词频进行降序排序
     all_words_tuple_list = sorted(all_words_dict.items(), key=lambda f:f[1], reverse=True) # 内建函数sorted参数需为list
-    all_words_list = list(zip(*all_words_tuple_list)[0])
+    all_words_list = list(list(zip(*all_words_tuple_list))[0])
 
     return all_words_list, train_data_list, test_data_list, train_class_list, test_class_list
 
@@ -135,7 +136,7 @@ def TextClassifier(train_feature_list, test_feature_list, train_class_list, test
 
 if __name__ == '__main__':
 
-    print "start"
+    print("start")
 
     ## 文本预处理
     folder_path = './Database/SogouC/Sample'
@@ -156,7 +157,7 @@ if __name__ == '__main__':
         train_feature_list, test_feature_list = TextFeatures(train_data_list, test_data_list, feature_words, flag)
         test_accuracy = TextClassifier(train_feature_list, test_feature_list, train_class_list, test_class_list, flag)
         test_accuracy_list.append(test_accuracy)
-    print test_accuracy_list
+    print (test_accuracy_list)
 
     # 结果评价
     plt.figure()
@@ -166,4 +167,4 @@ if __name__ == '__main__':
     plt.ylabel('test_accuracy')
     plt.savefig('result.png')
 
-    print "finished"
+    print ("finished")
